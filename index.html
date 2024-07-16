@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="One embedder for all tasks">
+  <meta name="keywords" content="Embedder, encoder">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/addon/runmode/runmode-standalone.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script>
+
+  <title>Instructor Text Embedding</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/emoji.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://hkunlp.github.io">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://yale-lily.github.io/spider">
+            Spider
+          </a>
+          <a class="navbar-item" href="https://github.com/HKUNLP/UnifiedSKG">
+            UnifiedSKG
+          </a>
+          <a class="navbar-item" href="https://github.com/Yushi-Hu/IC-DST">
+            IC-DST
+          </a>
+          <a class="navbar-item" href="https://github.com/HKUNLP/icl-selective-annotation">
+            Selective Annotation
+          </a>
+          <a class="navbar-item" href="https://ds1000-code-gen.github.io/">
+            DS-1000
+          </a>
+          <a class="navbar-item" href="https://lm-code-binder.github.io/">
+            Binder
+          </a>
+            <a class="navbar-item" href="https://text-to-reward.github.io/">
+              Text2Reward
+            </a>
+            <a class="navbar-item" href="https://github.com/xlang-ai/OpenAgents">
+              OpenAgents
+            </a>
+            <a class="navbar-item" href="https://github.com/OpenLemur/lemur">
+              Lemur-70B
+            </a>
+            <a class="navbar-item" href="https://arks-codegen.github.io/">
+              ARKS
+            </a>
+            <a class="navbar-item" href="https://os-world.github.io/">
+              OSWorld
+            </a>
+            <a class="navbar-item" href="https://spider2-v.github.io/">
+              Spider2-V
+            </a>
+             <a class="navbar-item" href="https://brightbenchmark.github.io/">
+              BRIGHT
+            </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">One Embedder, Any Task: Instruction-Finetuned Text Embeddings</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://hongjin-su.github.io/">Hongjin Su*</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://weijia-shi.netlify.app/">Weijia Shi*</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://homes.cs.washington.edu/~jkasai/">Jungo Kasai</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://homes.cs.washington.edu/~yizhongw/">Yizhong Wang</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://yushi-hu.github.io/">Yushi Hu</a><sup>2</sup>,
+            </span><br>
+            <span class="author-block">
+              <a href="https://people.ece.uw.edu/ostendorf/">Mari Ostendorf</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scottyih.org/">Wen-tau Yih,</a><sup>3</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://nasmith.github.io/#:~:text=Noah%20Smith%20is%20a%20computer,a%20wide%20range%20of%20applications.">Noah A. Smith</a>,<sup>2,</sup><sup>4</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://www.cs.washington.edu/people/faculty/lsz">Luke Zettlemoyer</a>,<sup>2,</sup><sup>3</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://taoyds.github.io/">Tao Yu</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>The University of Hong Kong,</span>
+            <span class="author-block"><sup>2</sup>University of Washington,</span>
+            <span class="author-block"><sup>3</sup>Meta AI,</span>
+            <span class="author-block"><sup>4</sup>Allen Institute for AI</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2212.09741"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/xlang-ai/instructor-embedding"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Twitter Link. -->
+              <span class="link-block">
+                <a href="https://huggingface.co/spaces/mteb/leaderboard"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fa fa-book"></i>
+                  </span>
+                  <span>Leaderboard</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/hkunlp/instructor-large"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Checkpoint</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                <a href="https://twitter.com/WeijiaShi2/status/1605307966109863936"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-twitter"></i>
+                  </span>
+                  <span>Twitter</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                <a href="https://drive.google.com/file/d/1_Ax8rTeeDKpNxj85LD2Yh7qsh3sYEiSH/view?usp=sharing"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-clone"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h2 class="subtitle has-text-centered">
+        We introduce <span class="dnerf">Instructor</span>👨‍🏫, an instruction-finetuned text embedding model that can generate text embeddings tailored to any task (e.g., classification, retrieval, clustering, text evaluation, etc.) and domains (e.g., science, finance, etc.) by simply providing the task instruction, without any finetuning. <span class="dnerf">Instructor</span> achieves sota on 70 diverse embedding tasks!
+      </h2>
+      <p align="center">
+        <img src="static/images/instructor.png" width="100%" align="middle" class="center"/> <!-- To .gif format-->
+      </p>
+
+    </div>
+  </div>
+</section>
+
+ <section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">How to use?</h2>
+        <div class="content has-text-justified">
+          <p>
+            <span class="dnerf">Instructor</span>👨‍🏫 embedding models are on <a href="https://huggingface.co/hkunlp/instructor-large">Huggingface</a> (<a href="https://huggingface.co/hkunlp/instructor-base">base</a>, <a href="https://huggingface.co/hkunlp/instructor-large">large</a>, <a href="https://huggingface.co/hkunlp/instructor-xl">xl</a>) 🤗! It is very simple to use!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+  
+ <section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We introduce INSTRUCTOR, a new method for computing text embeddings given task instructions: every text input is embedded together with instructions explaining the use case (e.g., task and domain descriptions). Unlike encoders from prior work that are more specialized, INSTRUCTOR is a single embedder that can generate text embeddings tailored to different downstream tasks and domains, without any further training. We first annotate instructions for 330 diverse tasks and train INSTRUCTOR on this multitask mixture with a contrastive loss. We evaluate INSTRUCTOR on 70 embedding evaluation tasks (64 of which are unseen during training), ranging from classification and information retrieval to semantic textual similarity and text generation evaluation. INSTRUCTOR, while having an order of magnitude fewer parameters than the previous best model, achieves state-of-the-art performance, with an average improvement of 3.4% compared to the previous best results on the 70 diverse datasets. Our analysis suggests that INSTRUCTOR is robust to changes in instructions, and that instruction finetuning mitigates the challenge of training a single model on diverse datasets.
+          </p>
+          <span class="dnerf">INSTRUCTOR (335M)</span> is strong because:
+        <ul>
+          <li><strong>Efficient:</strong> &nbsp Fast adaptation!
+            <br><span class="dnerf">INSTRUCTOR</span> can calculate domain-specific and task-aware embeddings without any further training. </li>
+          <li><strong>General:</strong> &nbsp Any task!
+            <br><span class="dnerf">INSTRUCTOR</span> can be applied to any task for computing fixed-length embeddings of texts. </li>
+          <li><strong>Performance:</strong> &nbsp State-of-the-art!
+            <br><span class="dnerf">INSTRUCTOR</span> achieves state-of-the-art performance on 70 datasets and surpasses models with an order of magnitude larger. </li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+  
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Results. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Main Results</h2>
+        <div class="content has-text-justified">
+          <p>
+            <span class="dnerf">INSTRUCTOR</span> achieves <strong>SOTA</strong> performance without further training on a wide range of tasks.
+          </p>
+        <ul>
+          <li><a href="https://huggingface.co/spaces/mteb/leaderboard">MTEB</a> (56 diverse datasets including BEIR, STS, etc.)</li>
+          <li><a href="https://arxiv.org/abs/2112.04139">Billboard</a> (Evaluate test generation quality)</li>
+          <li><a href="https://arxiv.org/abs/2209.01975">Prompt Retrieval</a> (Retrieve examples for in-context learning) </li>
+        </ul>
+          <img src="static/images/main_results.png" class="center">
+          <p>
+            Retri., Pair., Class., Sum., Text Eval. refer to retrieval, pair classification, classification, summarization, and text evaluation, respectively. Compared to GTR(335M/1.5B), from which INSTRUCTOR (335M/1.5B) is initialized, instruction finetuninig enhances the performance by 5.9%. Compared to the state-of-the-art model (Sent-T5-XXL), INSTRUCTOR (335M/1.5B) achieves 3.4% and 4.1% performance gains respectively.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--/ Results. -->
+
+</section>
+  
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Results. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Analysis</h2>
+        <div class="content has-text-justified">
+          <p>
+            Further, the instruction has shown to be important to the INSTRUCTOR training on diverse data (Left), and super-NaturalInstruction datasets are critical to the INSTRUCTOR robustness of prompt paraphrase.
+          </p>
+        <img src="static/images/figure34.png" class="center">
+          <p>
+            In addition, by making instruction more detailed (Left) and model size larger (Right), the performance of INSTRUCTOR is consistently improved.
+          </p>
+        <img src="static/images/figure56.png" class="center">
+          <p>
+            With domain shift in evaluation, the improvement of instruction tuning is more pronounced.
+          </p>
+         <p align="center">
+        <img src="static/images/domain_adaptation.png" width="400" height="100" class="center">
+           </p>
+          <p>
+            Last but not least, we use T-SNE to visualize two examples. The green dot pair is an example with different sentiment. Without instructions, they are close in the embedding space (probably because they 4 same words in text). With instructions, INSTRUCTOR separates them apart and differentiate their sentiment. For red pairs, they are distant without instructions (probably because they look very different). With instructions, they are closer, which is aligned with their same emotion.
+          </p>
+        <p align="center">
+           <img src="static/images/qualititive.png" width="400" height="400" class="center"> <!-- To .gif format-->
+        </p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--/ Results. -->
+
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">More instruction examples</h2>
+        <div class="content has-text-justified">
+        <p align="center">
+           <img src="static/images/instruction_examples.png" class="center"> <!-- To .gif format-->
+        </p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+ <section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">MEDI Data</h2>
+        <div class="content has-text-justified">
+        <p>
+            MEDI (Multitask Embeddings Data with Instructions) data consist of a collection of 330 datasets from Super-NI(Super-NaturalInstructions), sentence-transformer embedding training data, and KILT, spanning a wide range of domains and tasks. We construct positive and negative pairs if they are not provided, and store them in a unified format:
+          </p>
+<pre><code>{
+    [{'query': ['Represent the Amazon title for retrieving relevant reviews; Input: ', 'Like a Jason Bourne in the Space Program!', 0], 'pos': ['Represent the Amazon review for retrieval; Input: ', 'Loved it!  It is Exciting, interesting, and even including information about the space program.', 1], 'neg': ['Represent the Amazon review for retrieval; Input: ', 'If you love Vegemite the way I do, this is the easiest way to obtain it.', 1]}, {'query': ['Represent the Amazon title for retrieving relevant reviews; Input: ', 'Anderson puts it all together', 0], 'pos': ['Represent the Amazon review for retrieval; Input: ', 'Having observed how techology has spawned new enterprises, I find that Anderson puts it all together in a meaningful and understandable tome.  He has found the common thread that will define success and failure in the future.', 1], 'neg': ['Represent the Amazon review for retrieval; Input: ', 'Outstanding device.  Very happy I upgraded.  The flexibility is endless.', 1]}, {'query': ['Represent the Amazon title for retrieving relevant reviews; Input: ', "I haven't really had a chance to use my purchase ...", 0], 'pos': ['Represent the Amazon review for retrieval; Input: ', "I haven't really had a chance to use my purchase, but it appears to be what I was looking for.", 1], 'neg': ['Represent the Amazon review for retrieval; Input: ', 'My new expandable hose works just as advertised after carefully following the first use instructions - adding pressure very gradually to allow the hose to expand slowly the first time!', 1]}, {'query': ['Represent the Amazon title for retrieving relevant reviews; Input: ', 'works cool, easy to implement', 0], 'pos': ['Represent the Amazon review for retrieval; Input: ', 'works cool, easy to implement, fix a door easily from inside, perfect for tenants with landlords who have lease-enabled entry access.', 1], 'neg': ['Represent the Amazon review for retrieval; Input: ', 'Another page turner !  I am going to research other books by this author as I have not read many and I really enjoy his themes and characters as well as the history.', 1]}]
+    [{'query': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'An old man with a bag of chips sits with a younger man holding a drink.', 0], 'pos': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'The men have food.', 1], 'neg': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'The men have starved to death.', 1]}, {'query': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'The woman on the left is having her picture taken with another woman who is wearing a tall pink hat.', 0], 'pos': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'Two women are being photographed.', 1], 'neg': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'The woman on the left is taking a picture of the other.', 1]}, {'query': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'Mother and daughter wearing Alice in wonderland customs are posing for a picture.', 0], 'pos': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'Two people are posing for the camera.', 1], 'neg': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'Two people are sleeping at the Disney Castle.', 1]}, {'query': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'A picture of two women with one in lacy white dress with handbag and leggings and the other with a tall red hat, black mid-dress, and frame like plastic dress on top.', 0], 'pos': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'A photo of a couple of females in strange outfits.', 1], 'neg': ['Represent the sentence for retrieving duplicate sentences; Input: ', 'Two females at a bar drinking.', 1]}]
+    ...
+    [{'query': ['Represent the image caption for retrieving duplicate captions; Input: ', 'Several men standing near a train while other men are walking towards the train. ', 0], 'pos': ['Represent the image caption for retrieving duplicate captions; Input: ', 'A train is on the train tracks while people stand around it.', 1], 'neg': ['Represent the image caption for retrieving duplicate captions; Input: ', "An old toilet that's missing its lid and is vandalized with graffiti.", 1]}, {'query': ['Represent the image caption for retrieving duplicate captions; Input: ', 'A curious cat looking at a yellow bird inside a cage.', 0], 'pos': ['Represent the image caption for retrieving duplicate captions; Input: ', 'A cat near a yellow bird in a cage. ', 1], 'neg': ['Represent the image caption for retrieving duplicate captions; Input: ', 'A giraffe walking through a lush green forest.', 1]}, {'query': ['Represent the image caption for retrieving duplicate captions; Input: ', 'There is a baby elephant all by itself in the cage. ', 0], 'pos': ['Represent the image caption for retrieving duplicate captions; Input: ', 'A small baby elephant biting a rail in a pin.', 1], 'neg': ['Represent the image caption for retrieving duplicate captions; Input: ', 'Books and snacks resting on and around a small table.', 1]}, {'query': ['Represent the image caption for retrieving duplicate captions; Input: ', 'A woman standing on the platform while looking in a train. ', 0], 'pos': ['Represent the image caption for retrieving duplicate captions; Input: ', 'A lady with a luggage cart sticking her head in a train door.', 1], 'neg': ['Represent the image caption for retrieving duplicate captions; Input: ', 'A giraffe that is standing in the grass on a sunny day. ', 1]}]
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop content">
+    <h2 class="title">Acknowledgement</h2>
+   We thank <a href="https://akariasai.github.io/">Akari Asai</a>, Jack Lin, Minghan Li, and <a href="https://noahs-ark.github.io/">the ARK group at UW</a> for their helpful feedback on this work.
+  </div>
+</section>
+ 
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{INSTRUCTOR,
+  title={One Embedder, Any Task: Instruction-Finetuned Text Embeddings},
+  author={Su, Hongjin and Shi, Weijia and Kasai, Jungo and Wang, Yizhong and Hu, Yushi and  Ostendorf, Mari and Yih, Wen-tau and Smith, Noah A. and  Zettlemoyer, Luke and Yu, Tao},
+  url={https://arxiv.org/abs/2212.09741},
+  year={2022},
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
